@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from newspaper_agency import settings
 
 
 class Topic(models.Model):
@@ -13,7 +14,7 @@ class Topic(models.Model):
 
 
 class Redactor(AbstractUser):
-    years_of_experience = models.IntegerField()
+    years_of_experience = models.IntegerField(null=True)
 
     class Meta:
         verbose_name = "redactor"
@@ -31,7 +32,7 @@ class Newspaper(models.Model):
         to=Topic, on_delete=models.CASCADE, related_name="newspaper"
     )
     redactor = models.ManyToManyField(
-        to=Redactor, related_name="newspaper"
+        to=settings.AUTH_USER_MODEL, related_name="newspaper"
     )
 
     def __str__(self):
