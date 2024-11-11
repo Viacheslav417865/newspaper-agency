@@ -1,6 +1,6 @@
 <ul>
   <li><a href={% url "catalog:index" %}>Home page</a></li>
-  <li><a href="#">Topics</a></li>
-  <li><a href="#">Newspapers</a></li>
-  <li><a href="#">Redactors</a></li>
+  <li><a href="{% url 'catalog:topic-list' %}">Topics</a></li>
+  <li><a href="{% url 'catalog:newspaper-list' %}">Newspapers</a></li>
+  <li><a href="{% url 'catalog:redactor-list' %}">Redactors</a></li>
 </ul>
