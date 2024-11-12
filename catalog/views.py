@@ -4,7 +4,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import generic
 from django.urls import reverse_lazy
-from catalog.form import NewspaperForm, RedactorCreationForm, RedactorYearsUpdateForm
+from catalog.form import (
+    NewspaperForm,
+    RedactorCreationForm,
+    RedactorYearsUpdateForm,
+)
 from catalog.models import Redactor, Topic, Newspaper
 
 
@@ -99,16 +103,16 @@ class RedactorUpdateView(LoginRequiredMixin, generic.UpdateView):
 
 class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Redactor
-    success_url = reverse_lazy("catalog:newspaper-list")
+    success_url = reverse_lazy("catalog:redactor-list")
 
 
 @login_required
 def toggle_assign_to_newspaper(request, pk):
     redactor = Redactor.objects.get(id=request.user.id)
-    if (
-        Newspaper.objects.get(id=pk) in redactor.newspaper.all()
-    ):
+    if Newspaper.objects.get(id=pk) in redactor.newspaper.all():
         redactor.newspaper.remove(pk)
     else:
         redactor.newspaper.add(pk)
-    return HttpResponseRedirect(reverse_lazy("catalog:newspaper-detail", args=[pk]))
+    return HttpResponseRedirect(
+        reverse_lazy("catalog:newspaper-detail", args=[pk])
+    )
