@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+  <h1>{{ object|yesno:"Update, Create" }} Topic</h1>
+    
+  <form action="" method="post" novalidate>  
+    {% csrf_token %}
+    
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    
+    {{ form|crispy }}
+      
+    <input class="btn btn-primary" type="submit" value="Submit">
+    <a href="{% url 'catalog:topic-list' %}" class="btn btn-success">Cancel</a>
+  </form>
+{% endblock %}
