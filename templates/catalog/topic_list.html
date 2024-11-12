@@ -1,11 +1,17 @@
 {% extends "base.html" %}
-
+{% load crispy_forms_filters %}
 {% block content %}
   <h1>Topics</h1>
+  
   <h2>
     Topics
     <a style="float: right" href="{% url 'catalog:topic-create' %}" class="btn btn-primary">Create</a>
   </h2>
+    
+  <form action="" method="get" class="form-inline mb-3">
+    {{ search_form|crispy }}
+    <input class="btn btn-primary" type="submit" value="🔍">
+  </form>
 
   {% if topic_list %}
     <table class="table">
@@ -23,16 +29,16 @@
             <td>{{ topic.id }}</td>
             <td>{{ topic.name }}</td>
             <td>
-              <a href="{% url 'catalog:topic-update' pk=topic.id %}" class="btn btn-warning btn-sm">Update</a>
+              <a href="{% url 'catalog:topic-update' pk=topic.id %}" class="btn btn-warning btn-sm" aria-label="Update topic {{ topic.name }}">Update</a>
             </td>
             <td>
-              <a href="{% url 'catalog:topic-delete' pk=topic.id %}" class="btn btn-danger btn-sm">Delete</a>
+              <a href="{% url 'catalog:topic-delete' pk=topic.id %}" class="btn btn-danger btn-sm" aria-label="Delete topic {{ topic.name }}" onclick="return confirm('Are you sure you want to delete this topic?');">Delete</a>
             </td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
   {% else %}
-    <p>No topics found</p>
+    <p>No topics found. <a href="{% url 'catalog:topic-create' %}">Create a new topic</a>.</p>
   {% endif %}
 {% endblock %}
