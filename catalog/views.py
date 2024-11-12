@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views import generic
 from django.urls import reverse_lazy
-from catalog.form import NewspaperForm
+from catalog.form import NewspaperForm, RedactorCreationForm, RedactorYearsUpdateForm
 from catalog.models import Redactor, Topic, Newspaper
 
 
@@ -84,3 +84,18 @@ class RedactorListView(LoginRequiredMixin, generic.ListView):
 class RedactorDetailView(LoginRequiredMixin, generic.DetailView):
     model = Redactor
     queryset = Redactor.objects.prefetch_related("newspaper__topic")
+
+
+class RedactorCreationView(LoginRequiredMixin, generic.CreateView):
+    model = Redactor
+    form_class = RedactorCreationForm
+
+
+class RedactorUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Redactor
+    form_class = RedactorYearsUpdateForm
+
+
+class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Redactor
+    success_url = reverse_lazy("catalog:newspaper-list")
