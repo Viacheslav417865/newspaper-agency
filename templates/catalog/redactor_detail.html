@@ -1,18 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <p>
-    <strong>{{ redactor.username }}</strong>
-    ({{ redactor.first_name }} {{ redactor.last_name }})
-    <strong>Years of experience: {{ redactor.years_of_experience }}</strong>
-  </p>
-  {% for newspaper in redactor.newspaper.all %}
-    <hr>
-    <p>
-      <strong><a href="{% url 'catalog:newspaper-detail' pk=newspaper.id %}">ID: {{ newspaper.id }}</a></strong>
-    </p>
-    <p>Newspaper title: {{ newspaper.title }}</p>
-    {% empty %}
-      <p>Has no newspaper</p>
-  {% endfor %}
+    <div class="card">
+        <div class="card-body">
+            <p>
+                <strong>{{ redactor.username }}</strong>
+                ({{ redactor.first_name }} {{ redactor.last_name }})
+                <strong>Years of experience: {{ redactor.years_of_experience }}</strong>
+            </p>
+            {% if redactor.newspaper.all %}
+                {% for newspaper in redactor.newspaper.all %}
+                    <hr>
+                    <p>
+                        <strong><a href="{% url 'catalog:newspaper-detail' pk=newspaper.id %}">ID: {{ newspaper.id }}</a></strong>
+                    </p>
+                    <p>Newspaper title: {{ newspaper.title }}</p>
+                {% endfor %}
+            {% else %}
+                <p>Has no newspapers</p>
+            {% endif %}
+            <a href="{% url 'catalog:redactor-update' pk=redactor.id %}" class="btn btn-secondary">Update</a>
+            <a href="{% url 'catalog:redactor-delete' pk=redactor.id %}" class="btn btn-danger">Delete</a>
+        </div>
+    </div>
 {% endblock %}

@@ -1,31 +1,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Redactors Table</h1>
-  {% if redactor_list %}
-    <table class="table">
-      <tr>
-        <th>username</th>
-        <th>Name</th>
-        <th>Surname</th>
-      </tr>
-    <tbody>
-      {% for redactor in redactor_list %}
-        <tr>
-          <td><a href="{% url 'catalog:redactor-detail' pk=redactor.id %}">{{ redactor.username }}</a></td>
-          <td><a href="{% url 'catalog:redactor-detail' pk=redactor.id %}">
-            {{ redactor.username }}
-            {% if user.id == driver.id %}
-              <span>(Me)</span>
-            {% endif %}
-          </a></td>
-          <td>{{ redactor.first_name }}</td>
-          <td>{{ redactor.last_name }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-    </table>
-      {% else %}
-        <p>There are no redactor in newspaper agency</p>
-  {% endif %}
+  <div class="card">
+      <div class="card-body">
+          <h1>Redactors Table</h1>
+          <a style="float: right" href="{% url 'catalog:redactor-create' %}" class="btn btn-primary link-to-page">Create</a>
+          {% if redactor_list %}
+              <table class="table">
+                  <thead>
+                      <tr>
+                          <th scope="col">Username</th>
+                          <th scope="col">First Name</th>
+                          <th scope="col">Last Name</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for redactor in redactor_list %}
+                          <tr>
+                              <td>
+                                  <a href="{% url 'catalog:redactor-detail' pk=redactor.id %}">
+                                      {{ redactor.username }} {% if user.id == redactor.id %}<span>(Me)</span>{% endif %}
+                                  </a>
+                              </td>
+                              <td>{{ redactor.first_name }}</td>
+                              <td>{{ redactor.last_name }}</td>
+                          </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+          {% else %}
+              <p>There are no redactors in the newspaper agency. <a href="{% url 'catalog:redactor-create' %}">Create one now!</a></p>
+          {% endif %}
+      </div>
+  </div>
 {% endblock %}

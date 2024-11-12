@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+  <div class="card">
+      <div class="card-body">
+          <h1>{{ object|yesno:"Update, Create" }} Redactor</h1>
+          
+          {% if form.non_field_errors %}
+              <div class="alert alert-danger">
+                  {{ form.non_field_errors }}
+              </div>
+          {% endif %}
+          
+          <form action="" method="post" novalidate>
+              {% csrf_token %}
+              {{ form|crispy }}
+              
+              <input class="btn btn-primary" type="submit" value="Submit">
+              <a href="{% url 'catalog:redactor-list' %}" class="btn btn-success" role="button">Cancel</a>
+          </form>
+      </div>
+  </div>
+{% endblock %}

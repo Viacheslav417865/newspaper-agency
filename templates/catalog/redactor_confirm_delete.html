@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Delete Redactor</h1>
+    
+  <div class="alert alert-warning" role="alert">
+      Are you sure you want to delete the redactor: <strong>{{ redactor.first_name }} {{ redactor.last_name }}</strong>?
+  </div>
+    
+  <form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Yes, delete!" class="btn btn-danger">
+    <a href="{% url 'catalog:topic-list' %}" class="btn btn-success">Cancel</a>
+  </form>
+{% endblock %}
