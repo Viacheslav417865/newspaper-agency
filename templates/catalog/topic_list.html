@@ -2,20 +2,32 @@
 
 {% block content %}
   <h1>Topics</h1>
-    
+  <h2>
+    Topics
+    <a style="float: right" href="{% url 'catalog:topic-create' %}" class="btn btn-primary">Create</a>
+  </h2>
+
   {% if topic_list %}
     <table class="table">
       <thead>
         <tr>
           <th>ID</th>
           <th>Name</th>
+          <th>Update</th>
+          <th>Delete</th>
         </tr>
       </thead>
       <tbody>
         {% for topic in topic_list %}
-          <tr>
+          <tr class="table-hover">
             <td>{{ topic.id }}</td>
             <td>{{ topic.name }}</td>
+            <td>
+              <a href="{% url 'catalog:topic-update' pk=topic.id %}" class="btn btn-warning btn-sm">Update</a>
+            </td>
+            <td>
+              <a href="{% url 'catalog:topic-delete' pk=topic.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
           </tr>
         {% endfor %}
       </tbody>
