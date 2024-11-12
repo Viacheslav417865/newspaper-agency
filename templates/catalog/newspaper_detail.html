@@ -6,6 +6,10 @@
             <h1>{{ newspaper.title }}</h1>
             <p><strong>Newspaper:</strong> ({{ newspaper.topic.name|default:"N/A" }}, {{ newspaper.topic.country|default:"N/A" }})</p>
             <h3>Redactors:</h3>
+            <a style="float: right" href="{% url 'catalog:toggle_assign_to_newspaper' pk=newspaper.id %}"
+               class="btn {% if user in newspaper.redactor.all %}btn-danger{% else %}btn-success{% endif %}">
+                {% if user in newspaper.redactor.all %}Delete me from this newspaper{% else %}Assign me to this newspaper{% endif %}
+            </a>
             <hr>
             {% if newspaper.redactor.all %}
                 <ul>

@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import generic
 from django.urls import reverse_lazy
@@ -99,3 +100,15 @@ class RedactorUpdateView(LoginRequiredMixin, generic.UpdateView):
 class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Redactor
     success_url = reverse_lazy("catalog:newspaper-list")
+
+
+@login_required
+def toggle_assign_to_newspaper(request, pk):
+    redactor = Redactor.objects.get(id=request.user.id)
+    if (
+        Newspaper.objects.get(id=pk) in redactor.newspaper.all()
+    ):
+        redactor.newspaper.remove(pk)
+    else:
+        redactor.newspaper.add(pk)
+    return HttpResponseRedirect(reverse_lazy("catalog:newspaper-detail", args=[pk]))
