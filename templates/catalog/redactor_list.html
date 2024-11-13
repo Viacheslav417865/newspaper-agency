@@ -24,7 +24,7 @@
                         {% for redactor in redactor_list %}
                             <tr>
                                 <td>
-                                    <a href="{% url 'catalog:redactor-detail' pk=redactor.id %}">
+                                    <a href="{{ redactor.get_absolute_url }}">
                                         {{ redactor.username }} 
                                         {% if user.id == redactor.id %}<span>(Me)</span>{% endif %}
                                     </a>
