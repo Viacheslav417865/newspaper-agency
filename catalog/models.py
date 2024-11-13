@@ -7,7 +7,7 @@ from django.conf import settings
 
 
 class Topic(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, default="Default Title")
 
     class Meta:
         ordering = ["title"]
@@ -31,7 +31,7 @@ class Redactor(AbstractUser):
         )
 
     def get_absolute_url(self):
-        return reverse("newspapers:redactor-detail", kwargs={"pk": self.pk})
+        return reverse("catalog:redactor-detail", kwargs={"pk": self.pk})
 
 
 class Newspaper(models.Model):

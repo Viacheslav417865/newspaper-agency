@@ -17,12 +17,12 @@ class ViewsTestCase(TestCase):
     def test_newspaper_create_view(self):
         self.client.force_login(self.user)
         response = self.client.post(
-            reverse("newspapers:newspapers-create"),
+            reverse("catalog:newspaper-create"),
             {"title": "Test", "content": "Test Content", "topic": 1},
         )
         self.assertEqual(response.status_code, 200)
 
     def test_redactor_profile_view(self):
         self.client.force_login(self.redactor)
-        response = self.client.get(reverse("newspapers:redactor-list"))
+        response = self.client.get(reverse("catalog:redactor-list"))
         self.assertEqual(response.status_code, 200)

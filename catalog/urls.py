@@ -5,9 +5,7 @@ from catalog.views import (
     TopicCreateView,
     TopicUpdateView,
     TopicDeleteView,
-    NewspaperListView,
     NewspaperDetailView,
-    NewspaperCreateView,
     NewspaperUpdateView,
     NewspaperDeleteView,
     RedactorListView,
@@ -16,6 +14,8 @@ from catalog.views import (
     RedactorUpdateView,
     RedactorDeleteView,
     toggle_assign_to_newspaper,
+    NewspaperListView,
+    NewspaperCreateView,
 )
 
 urlpatterns = [

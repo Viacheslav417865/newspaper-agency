@@ -119,22 +119,19 @@ class NewspaperDeleteView(LoginRequiredMixin, generic.DeleteView):
 class RedactorListView(LoginRequiredMixin, generic.ListView):
     model = Redactor
     paginate_by = 5
-    queryset = Redactor.objects.all()
+
+    queryset = Redactor.objects.prefetch_related("newspapers")
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(RedactorListView, self).get_context_data(**kwargs)
         username = self.request.GET.get("username", "")
-        context["search_form"] = RedactorSearchForm(
-            initial={"username": username}
-        )
+        context["search_form"] = RedactorSearchForm(initial={"username": username})
         return context
 
     def get_queryset(self):
         form = RedactorSearchForm(self.request.GET)
         if form.is_valid():
-            return self.queryset.filter(
-                username__icontains=form.cleaned_data["username"]
-            )
+            return self.queryset.filter(username__icontains=form.cleaned_data["username"])
         return self.queryset
 
 
@@ -170,4 +167,3 @@ def toggle_assign_to_newspaper(request, pk):
     return HttpResponseRedirect(
         reverse_lazy("catalog:newspaper-detail", args=[pk])
     )
-
