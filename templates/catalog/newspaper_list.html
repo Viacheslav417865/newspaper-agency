@@ -19,13 +19,15 @@
         <ul class="list-unstyled">
             {% for newspaper in newspaper_list %}
                 <li>
-                    <a href="{% url 'catalog:newspaper-detail' pk=newspaper.id %}">
+                    <a href="{% url 'catalog:newspaper-detail' pk=newspaper.id %}" aria-label="Read newspaper {{ newspaper.title }}">
                         {{ newspaper.id }} - {{ newspaper.title }} ({{ newspaper.topic.name }})
                     </a>
                 </li>
             {% endfor %}
         </ul>
     {% else %}
-        <p>There are no newspapers in the newspaper agency.</p>
+        <div class="alert alert-info" role="alert">
+            There are no newspapers in the newspaper agency.
+        </div>
     {% endif %}
 {% endblock %}
