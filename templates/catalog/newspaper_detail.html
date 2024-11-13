@@ -4,18 +4,21 @@
     <div class="card">
         <div class="card-body">
             <h1>{{ newspaper.title }}</h1>
-            <p><strong>Newspaper:</strong> ({{ newspaper.topic.name|default:"N/A" }}, {{ newspaper.topic.country|default:"N/A" }})</p>
+            <p><strong>Newspaper:</strong>
+                ({{ newspaper.topic.name|default:"N/A" }}, {{ newspaper.topic.country|default:"N/A" }})</p>
             <h3>Redactors:</h3>
             <a style="float: right" href="{% url 'catalog:toggle_assign_to_newspaper' pk=newspaper.id %}"
                class="btn {% if user in newspaper.redactor.all %}btn-danger{% else %}btn-success{% endif %}">
-                {% if user in newspaper.redactor.all %}Delete me from this newspaper{% else %}Assign me to this newspaper{% endif %}
+                {% if user in newspaper.redactor.all %}Delete me from this newspaper{% else %}Assign me to this
+                    newspaper{% endif %}
             </a>
             <hr>
             {% if newspaper.redactor.all %}
                 <ul>
                     {% for redactor in newspaper.redactor.all %}
                         <li>
-                            <strong><a href="{% url 'catalog:redactor-detail' pk=redactor.id %}">{{ redactor.first_name }} {{ redactor.last_name }}</a></strong>
+                            <strong><a
+                                    href="{% url 'catalog:redactor-detail' pk=redactor.id %}">{{ redactor.first_name }} {{ redactor.last_name }}</a></strong>
                             (Years of experience: {{ redactor.years_of_experience }})
                         </li>
                     {% endfor %}
@@ -23,8 +26,9 @@
             {% else %}
                 <p>No redactors available for this newspaper.</p>
             {% endif %}
+            <p>{{ newspaper.content }}</p>
             <a href="{% url 'catalog:newspaper-update' pk=newspaper.id %}" class="btn btn-secondary">Update</a>
-            <a href="{% url 'catalog:newspaper-delete' pk=newspaper.id %}" class="btn btn-danger">Delete</a>
+            <a href="{% url 'catalog:newspaper-delete' pk=newspaper.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this newspaper?');">Delete</a>
         </div>
     </div>
 {% endblock %}
