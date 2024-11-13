@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from catalog.models import Redactor, Newspaper
+from catalog.models import Redactor, Newspaper, Topic
+
+
 @admin.register(Redactor)
 class RedactorAdmin(UserAdmin):
     list_display = UserAdmin.list_display + ("years_of_experience",)
@@ -26,3 +28,6 @@ class RedactorAdmin(UserAdmin):
 class NewspaperAdmin(admin.ModelAdmin):
     search_fields = ("title",)
     list_filter = ("title", "content", "published_date", "topic")
+
+
+admin.site.register(Topic)

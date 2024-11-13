@@ -1,40 +1,30 @@
 {% extends "base.html" %}
 {% load crispy_forms_filters %}
+
 {% block content %}
-    <h1>Newspaper Table</h1>
+    <h1>Newspaper List</h1>
     <h2>
-        Newspaper Table
-        <a style="float: right" href="{% url 'catalog:newspaper-create' %}" class="btn btn-primary">Create</a>
+        Newspaper List
+        <a href="{% url 'catalog:newspaper-create' %}" class="btn btn-primary link-to-page">
+            Create
+        </a>
     </h2>
-    <form action="" method="get" class="form-inline">
+    
+    <form action="" method="get" class="form-inline mb-3">
         {{ search_form|crispy }}
-        <input class="btn btn-primary" type="submit" value="🔍">
+        <input class="btn btn-primary" type="submit" value="🔍" aria-label="Search Newspapers">
     </form>
+    
     {% if newspaper_list %}
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Content</th>
-                    <th scope="col">Date of publish</th>
-                    <th scope="col">Topic</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for newspaper in newspaper_list %}
-                    <tr>
-                        <td><a href="{% url 'catalog:newspaper-detail' pk=newspaper.id %}">{{ newspaper.id }}</a></td>
-                        <td>{{ newspaper.title }}</td>
-                        <td>{{ newspaper.content|slice:":50" }}{% if newspaper.content|length > 50 %}...{% endif %}</td>
-                        <td>{{ newspaper.published_date|date:"F j, Y" }}</td>
-                        <td>{{ newspaper.topic.name }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <ul class="list-unstyled">
+            {% for newspaper in newspaper_list %}
+                <li>
+                    <a href="{% url 'catalog:newspaper-detail' pk=newspaper.id %}">
+                        {{ newspaper.id }} - {{ newspaper.title }} ({{ newspaper.topic.name }})
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
     {% else %}
         <p>There are no newspapers in the newspaper agency.</p>
     {% endif %}

@@ -8,7 +8,14 @@ from catalog.models import Redactor, Newspaper
 class RedactorCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = Redactor
-        fields = UserCreationForm.Meta.fields + ("years_of_experience",)
+        fields = UserCreationForm.Meta.fields + (
+            "years_of_experience",
+            "first_name",
+            "last_name",
+        )
+
+    def clean_license_number(self):
+        return validate_years_of_experience(self.cleaned_data["years_of_experience"])
 
 
 class RedactorYearsUpdateForm(forms.ModelForm):
@@ -16,9 +23,12 @@ class RedactorYearsUpdateForm(forms.ModelForm):
         model = Redactor
         fields = ("years_of_experience",)
 
-    def clean_years_of_experience(self):
-        year_of_experience = self.cleaned_data["years_of_experience"]
-        if not 0 < year_of_experience < 80:
+    def clean_license_number(self):
+        return validate_years_of_experience(self.cleaned_data["years_of_experience"])
+
+
+    def validate_years_of_experience(years_of_experience):
+        if not 0 < years_of_experience < 80:
             raise ValidationError(
                 "Ensure that the years of experience is between 0 and 80"
             )
@@ -35,9 +45,11 @@ class NewspaperForm(forms.ModelForm):
         required=False,
     )
     published_date = forms.DateField(widget=DateInput)
+
     class Meta:
         model = Newspaper
         fields = "__all__"
+
 
 class RedactorSearchForm(forms.Form):
     username = forms.CharField(

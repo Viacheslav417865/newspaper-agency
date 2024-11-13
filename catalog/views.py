@@ -152,6 +152,7 @@ class RedactorCreationView(LoginRequiredMixin, generic.CreateView):
 class RedactorUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Redactor
     form_class = RedactorYearsUpdateForm
+    success_url = reverse_lazy("catalog:redactor-list")
 
 
 class RedactorDeleteView(LoginRequiredMixin, generic.DeleteView):
@@ -169,3 +170,4 @@ def toggle_assign_to_newspaper(request, pk):
     return HttpResponseRedirect(
         reverse_lazy("catalog:newspaper-detail", args=[pk])
     )
+

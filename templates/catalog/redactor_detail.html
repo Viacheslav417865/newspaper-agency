@@ -3,24 +3,33 @@
 {% block content %}
     <div class="card">
         <div class="card-body">
-            <p>
-                <strong>{{ redactor.username }}</strong>
-                ({{ redactor.first_name }} {{ redactor.last_name }})
-                <strong>Years of experience: {{ redactor.years_of_experience }}</strong>
-            </p>
-            {% if redactor.newspaper.all %}
-                {% for newspaper in redactor.newspaper.all %}
-                    <hr>
-                    <p>
-                        <strong><a href="{% url 'catalog:newspaper-detail' pk=newspaper.id %}">ID: {{ newspaper.id }}</a></strong>
-                    </p>
-                    <p>Newspaper title: {{ newspaper.title }}</p>
-                {% endfor %}
-            {% else %}
-                <p>Has no newspapers</p>
-            {% endif %}
-            <a href="{% url 'catalog:redactor-update' pk=redactor.id %}" class="btn btn-secondary">Update</a>
-            <a href="{% url 'catalog:redactor-delete' pk=redactor.id %}" class="btn btn-danger">Delete</a>
+            <h1>
+                Username: {{ redactor.username }}
+                <a href="{% url 'catalog:redactor-delete' pk=redactor.id %}" class="btn btn-danger link-to-page" onclick="return confirm('Are you sure you want to delete this redactor?');">
+                    Delete
+                </a>
+                <a href="{% url 'catalog:redactor-update' pk=redactor.id %}" class="btn btn-secondary link-to-page">
+                    Update Years of Experience
+                </a>
+            </h1>
+            <p><strong>First Name:</strong> {{ redactor.first_name }}</p>
+            <p><strong>Last Name:</strong> {{ redactor.last_name }}</p>
+            <p><strong>Years of Experience:</strong> {{ redactor.years_of_experience }}</p>
+            <p><strong>Is Staff:</strong> {{ redactor.is_staff|yesno:"Yes,No" }}</p>
+            
+            <div class="mt-4">
+                <h4>Newspapers</h4>
+                {% if redactor.newspaper.all %}
+                    {% for newspaper in redactor.newspaper.all %}
+                        <hr>
+                        <p><strong>Title:</strong> {{ newspaper.title }}</p>
+                        <p><strong>Topic:</strong> {{ newspaper.topic.name }}</p>
+                        <p class="text-muted"><strong>ID:</strong> {{ newspaper.id }}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>No newspapers!</p>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}

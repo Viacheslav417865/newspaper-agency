@@ -1,20 +1,23 @@
 {% extends "base.html" %}
 {% load crispy_forms_filters %}
+
 {% block content %}
-  <h1>Topics</h1>
+  <h1>Topic List</h1>
   
   <h2>
-    Topics
-    <a style="float: right" href="{% url 'catalog:topic-create' %}" class="btn btn-primary">Create</a>
+    Topic List
+    <a href="{% url 'catalog:topic-create' %}" class="btn btn-primary link-to-page">
+      Create
+    </a>
   </h2>
     
   <form action="" method="get" class="form-inline mb-3">
     {{ search_form|crispy }}
-    <input class="btn btn-primary" type="submit" value="🔍">
+    <input class="btn btn-primary" type="submit" value="🔍" aria-label="Search topics">
   </form>
 
   {% if topic_list %}
-    <table class="table">
+    <table class="table table-striped">
       <thead>
         <tr>
           <th>ID</th>
@@ -39,6 +42,6 @@
       </tbody>
     </table>
   {% else %}
-    <p>No topics found. <a href="{% url 'catalog:topic-create' %}">Create a new topic</a>.</p>
+    <p>There are no topics in the agency. <a href="{% url 'catalog:topic-create' %}">Create a new topic</a>.</p>
   {% endif %}
 {% endblock %}

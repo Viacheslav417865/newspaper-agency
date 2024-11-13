@@ -24,7 +24,7 @@
     
     {{ form|crispy }}
     <input class="btn btn-primary" type="submit" value="Submit">
-    <a href="{% url 'catalog:newspaper-detail' pk=newspaper.id %}" class="btn btn-success">Cancel</a>
+    <a href="{% url 'catalog:newspaper-detail' pk=newspaper.id %}" class="btn btn-secondary">Cancel</a>
   
   </form>
 {% endblock %}
