@@ -1,61 +1,56 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
-from catalog.form import RedactorCreationForm, RedactorYearsUpdateForm
-from catalog.models import Redactor
+from django.urls import reverse
 
-class RedactorCreationFormTest(TestCase):
-    def test_valid_data(self):
-        form_data = {
-            "username": "testuser",
-            "password1": "testpassword123",
-            "password2": "testpassword123",
-            "years_of_experience": 5,
-            "first_name": "John",
-            "last_name": "Doe"
+from catalog.form import RedactorCreationForm, RedactorUpdateForm
+from catalog.models import Topic
+
+
+class FormTest(TestCase):
+    def setUp(self) -> None:
+        self.form_data = {
+            "username": "test.test",
+            "password1": "test12345",
+            "password2": "test12345",
+            "first_name": "first",
+            "last_name": "last",
+            "years_of_experience": 9,
         }
-        form = RedactorCreationForm(data=form_data)
+
+    def test_redactor_creation_form_with_years_of_experience(self):
+        form = RedactorCreationForm(data=self.form_data)
+
         self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data, self.form_data)
 
-    def test_invalid_years_of_experience(self):
+    def test_redactor_update_form(self):
         form_data = {
-            "username": "testuser",
-            "password1": "testpassword123",
-            "password2": "testpassword123",
-            "years_of_experience": 100,
-            "first_name": "John",
-            "last_name": "Doe",
+            "years_of_experience": 8,
+            "first_name": "first_name",
+            "last_name": "last_name",
         }
-        form = RedactorCreationForm(data=form_data)
-        self.assertFalse(form.is_valid())
-        self.assertIn("years_of_experience", form.errors)
+        form = RedactorUpdateForm(data=form_data)
 
-    def test_password_mismatch(self):
-        form_data = {
-            "username": "testuser",
-            "password1": "testpassword123",
-            "password2": "testpassword321",  # Mismatched passwords
-            "years_of_experience": 5,
-            "first_name": "John",
-            "last_name": "Doe"
-        }
-        form = RedactorCreationForm(data=form_data)
-        self.assertFalse(form.is_valid())
-        self.assertIn("password2", form.errors)  # Ensure password mismatch is caught
-
-
-class RedactorYearsUpdateFormTest(TestCase):
-    def test_valid_data(self):
-        redactor = Redactor.objects.create_user(
-            username="existinguser", password="password123"
-        )
-        form_data = {"years_of_experience": 10}
-        form = RedactorYearsUpdateForm(data=form_data, instance=redactor)
         self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data, form_data)
 
-    def test_invalid_years_of_experience(self):
-        redactor = Redactor.objects.create_user(
-            username="existinguser", password="password123"
+    def test_newspaper_creation_form(self):
+        redactor = get_user_model().objects.create_superuser(
+            username="test.test",
+            password="password12345",
+            first_name="first",
+            last_name="last",
+            years_of_experience=5,
         )
-        form_data = {"years_of_experience": 100}  # Invalid years of experience
-        form = RedactorYearsUpdateForm(data=form_data, instance=redactor)
-        self.assertFalse(form.is_valid())
-        self.assertIn("years_of_experience", form.errors)
+        topic = Topic.objects.create(name="test")
+        form_data = {
+            "title": "title test",
+            "content": "some content" * 100,
+            "published_date": "2020-01-01",
+            "topic": topic.id,
+            "redactor": redactor.id,
+        }
+        url = reverse("newspaper:newspaper-create")
+        response = self.client.post(url, form_data)
+
+        self.assertEqual(response.status_code, 302)

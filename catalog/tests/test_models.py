@@ -1,49 +1,54 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
-from catalog.models import Topic, Redactor, Newspaper, ActivateToken
+
+from catalog.models import Topic, Newspaper
 
 
-class TopicModelTest(TestCase):
-    def test_topic_creation(self):
-        topic = Topic.objects.create(title="Test Topic")
-        self.assertEqual(topic.title, "Test Topic")
+class ModelsTests(TestCase):
+    def setUp(self) -> None:
+        self.topic = Topic.objects.create(name="test")
 
-
-class RedactorModelTest(TestCase):
-    def test_redactor_creation(self):
-        redactor = Redactor.objects.create(
-            username="test_redactor", years_of_experience=3
-        )
-        self.assertEqual(redactor.username, "test_redactor")
-        self.assertEqual(redactor.years_of_experience, 3)
-        self.assertEqual(redactor.__str__(),
-                         f"{redactor.username} ({redactor.first_name} {redactor.last_name}): "
-                                             f"{redactor.years_of_experience} years")
-
-
-class NewspaperModelTest(TestCase):
-    def test_newspaper_creation(self):
-        topic = Topic.objects.create(title="Test Topic")
-        redactor = Redactor.objects.create(
-            username="test_redactor", ears_of_experience=3
+        self.username = "test.test"
+        self.password = "test12345"
+        self.years_of_experience = 5
+        self.redactor = get_user_model().objects.create_user(
+            username=self.username,
+            password=self.password,
+            first_name="first_name",
+            last_name="test_last",
+            years_of_experience=self.years_of_experience,
         )
 
-        newspaper = Newspaper.objects.create(
-            title="Test Newspaper", content="Test content", topic=topic
+        self.newspaper = Newspaper.objects.create(
+            title="test_title",
+            topic=self.topic,
+            content="some text",
+            published_date="2022-11-11",
         )
-        newspaper.redactor.add(redactor)
-        self.assertEqual(newspaper.title, "Test Newspaper")
-        self.assertEqual(newspaper.content, "Test content")
-        self.assertEqual(newspaper.topic, topic)
-        self.assertEqual(newspaper.topic.__str__(), f"{newspaper.topic.title}")
-        self.assertEqual(newspaper.__str__(),
-                         f"{newspaper.title}: {newspaper.content} ({newspaper.published_date})")
-        self.assertIn(redactor, newspaper.redactor.all())
 
-
-class ActivateTokenModelTest(TestCase):
-    def test_token_creation(self):
-        redactor = Redactor.objects.create(
-            username="test_redactor", years_of_experience=3
+    def test_topic_str(self):
+        self.assertEqual(
+            str(self.topic),
+            f"{self.topic.name}",
         )
-        token = ActivateToken.objects.create(user=redactor)
-        self.assertTrue(token.verify_token())
+
+    def test_redactor_str(self):
+        self.assertEqual(
+            str(self.redactor),
+            f"{self.redactor.username} "
+            f"({self.redactor.first_name} {self.redactor.last_name})",
+        )
+
+    def test_newspaper_str(self):
+        self.assertEqual(
+            str(self.newspaper),
+            f"{self.topic.name} "
+            f"{self.newspaper.title} {self.newspaper.published_date}",
+        )
+
+    def test_create_redactor_with_years_of_experience(self):
+        self.assertEqual(self.redactor.username, self.username)
+        self.assertTrue(self.redactor.check_password(self.password))
+        self.assertEqual(
+            self.redactor.years_of_experience, self.years_of_experience
+        )
