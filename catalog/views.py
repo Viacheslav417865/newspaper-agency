@@ -151,6 +151,8 @@ class NewspaperCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = NewspaperForm
     success_url = reverse_lazy("catalog:newspaper-list")
 
+    def get_success_url(self):
+        return reverse_lazy("catalog:newspaper-detail", kwargs={'pk': self.object.pk})
 
 class NewspaperUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Newspaper

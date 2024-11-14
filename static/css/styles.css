@@ -23,7 +23,7 @@ body {
     }
 }
 body, html {
-  background-image: url("https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/team-working.jpg");
+  background-image: url('/static/curved-images/curved.jpg');
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;
