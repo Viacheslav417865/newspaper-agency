@@ -50,7 +50,7 @@ class FormTest(TestCase):
             "topic": topic.id,
             "redactor": redactor.id,
         }
-        url = reverse("newspaper:newspaper-create")
+        url = reverse("catalog:newspaper-create")
         response = self.client.post(url, form_data)
 
         self.assertEqual(response.status_code, 302)

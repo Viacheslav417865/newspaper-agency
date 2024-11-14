@@ -3,6 +3,7 @@ from catalog.views import (
     index,
     TopicListView,
     TopicCreateView,
+    TopicDetailView,
     TopicUpdateView,
     TopicDeleteView,
     NewspaperDetailView,
@@ -22,6 +23,7 @@ urlpatterns = [
     path("", index, name="index"),
     path("topic/", TopicListView.as_view(), name="topic-list"),
     path("topic/create/", TopicCreateView.as_view(), name="topic-create"),
+    path("topic/<int:pk>/", TopicDetailView.as_view(), name="topic-detail"),
     path(
         "topic/<int:pk>/update/",
         TopicUpdateView.as_view(),

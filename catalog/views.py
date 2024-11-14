@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic
+from django.views.generic import DetailView
 
 from catalog.form import (
     NewspaperForm,
@@ -104,6 +105,11 @@ class TopicUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Topic
     fields = "__all__"
     success_url = reverse_lazy("catalog:topic-list")
+
+
+class TopicDetailView(DetailView):
+    model = Topic
+    template_name = "catalog/topic_detail.html"
 
 
 class TopicDeleteView(LoginRequiredMixin, generic.DeleteView):
