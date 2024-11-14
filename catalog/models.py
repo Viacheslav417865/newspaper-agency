@@ -1,81 +1,40 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
-from django.utils import timezone
-from django.utils.crypto import get_random_string
-from django.conf import settings
 
 
 class Topic(models.Model):
-    title = models.CharField(max_length=255, default="Default Title")
+    name = models.CharField(max_length=255, unique=True)
 
     class Meta:
-        ordering = ["title"]
+        ordering = ["name"]
 
     def __str__(self):
-        return f"{self.title}"
+        return self.name
 
 
 class Redactor(AbstractUser):
-    years_of_experience = models.IntegerField(default=1)
+    years_of_experience = models.IntegerField(null=False, default=0)
 
     class Meta:
-        ordering = ["years_of_experience", "username"]
         verbose_name = "redactor"
         verbose_name_plural = "redactors"
 
     def __str__(self):
-        return (
-            f"{self.username} ({self.first_name} {self.last_name}): "
-            f"{self.years_of_experience} years"
-        )
+        return f"{self.username} ({self.first_name} {self.last_name})"
 
     def get_absolute_url(self):
         return reverse("catalog:redactor-detail", kwargs={"pk": self.pk})
 
 
 class Newspaper(models.Model):
-    title = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255)
     content = models.TextField()
-    published_date = models.DateTimeField(auto_now_add=True, blank=True)
-    main_img = models.ImageField(upload_to="images/", default="images/Default.jpg")
-
+    published_date = models.DateField(auto_now=False)
     topic = models.ForeignKey(
-        Topic, on_delete=models.CASCADE, related_name="newspapers"
+        to=Topic, on_delete=models.CASCADE, related_name="newspaper"
     )
-
-    redactor = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="newspapers")
-
-    class Meta:
-        ordering = ["-published_date"]
+    redactor = models.ManyToManyField(to=Redactor, related_name="newspaper")
 
     def __str__(self):
-        return f"{self.title}: {self.content} ({self.published_date})"
-
-
-class AbstractToken(models.Model):
-    create_at = models.DateTimeField(auto_now_add=True)
-    token = models.CharField(max_length=64, unique=True, default=None, blank=True)
-    user = models.ForeignKey(Redactor, on_delete=models.CASCADE, related_name="tokens")
-
-    class Meta:
-        abstract = True
-
-    def verify_token(self, days: int = 1) -> bool:
-        validate_exp = timezone.localtime(
-            self.create_at
-        ) > timezone.now() - timezone.timedelta(days=days)
-        return validate_exp
-
-    def save(self, *args, **kwargs):
-        if not self.token:
-            self.token = get_random_string(length=64)
-        super().save(*args, **kwargs)
-
-
-class ActivateToken(AbstractToken):
-    class Meta:
-        verbose_name_plural = "Activation tokens"
-
-    def __str__(self):
-        return f"{self.user}'s token activate: {self.token}"
+        return f"{self.topic.name} {self.title} {self.published_date}"

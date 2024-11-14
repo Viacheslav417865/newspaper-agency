@@ -5,11 +5,17 @@ from django.core.exceptions import ValidationError
 from catalog.models import Redactor, Newspaper
 
 
-def validate_years_of_experience(years_of_experience):
-    if not 0 < years_of_experience < 80:
-        raise ValidationError(
-            "Ensure that the years of experience is between 0 and 80"
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"placeholder": "Username", "class": "form-control"}
         )
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={"placeholder": "Password", "class": "form-control"}
+        )
+    )
 
 
 class RedactorCreationForm(UserCreationForm):
@@ -22,20 +28,29 @@ class RedactorCreationForm(UserCreationForm):
         )
 
     def clean_years_of_experience(self):
-        years_of_experience = self.cleaned_data["years_of_experience"]
-        validate_years_of_experience(years_of_experience)
-        return years_of_experience
+        return validate_years_of_experience(
+            self.cleaned_data["years_of_experience"]
+        )
 
 
-class RedactorYearsUpdateForm(forms.ModelForm):
+class RedactorUpdateForm(forms.ModelForm):
     class Meta:
         model = Redactor
-        fields = ("years_of_experience",)
+        fields = ("years_of_experience", "first_name", "last_name")
 
     def clean_years_of_experience(self):
-        years_of_experience = self.cleaned_data["years_of_experience"]
-        validate_years_of_experience(years_of_experience)
-        return years_of_experience
+        return validate_years_of_experience(
+            self.cleaned_data["years_of_experience"]
+        )
+
+
+def validate_years_of_experience(years_of_experience):
+    if years_of_experience < 0 or years_of_experience > 80:
+        raise ValidationError(
+            "Ensure that the years of experience is between 0 and 80"
+        )
+
+    return years_of_experience
 
 
 class DateInput(forms.DateInput):
@@ -60,7 +75,7 @@ class RedactorSearchForm(forms.Form):
         max_length=255,
         required=False,
         label="",
-        widget=forms.TextInput(attrs={"placeholder": "Search by username"})
+        widget=forms.TextInput(attrs={"placeholder": "Search by username"}),
     )
 
 
@@ -69,7 +84,7 @@ class NewspaperSearchForm(forms.Form):
         max_length=255,
         required=False,
         label="",
-        widget=forms.TextInput(attrs={"placeholder": "Search by title"})
+        widget=forms.TextInput(attrs={"placeholder": "Search by title"}),
     )
 
 
@@ -78,5 +93,5 @@ class TopicSearchForm(forms.Form):
         max_length=255,
         required=False,
         label="",
-        widget=forms.TextInput(attrs={"placeholder": "Search by name"})
+        widget=forms.TextInput(attrs={"placeholder": "Search by name"}),
     )

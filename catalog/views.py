@@ -1,30 +1,65 @@
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.views import generic
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.views import generic
+
 from catalog.form import (
     NewspaperForm,
     RedactorCreationForm,
-    RedactorYearsUpdateForm,
+    RedactorUpdateForm,
     TopicSearchForm,
     RedactorSearchForm,
     NewspaperSearchForm,
+    LoginForm,
 )
 from catalog.models import Redactor, Topic, Newspaper
 
 
+def login_view(request):
+    form = LoginForm(request.POST or None)
+
+    msg = None
+
+    if request.method == "POST":
+
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect("/")
+            else:
+                msg = "Invalid credentials"
+        else:
+            msg = "Error validating the form"
+
+    return render(request, "registration/login.html", {"form": form, "msg": msg})
+
+
+def logout_view(request):
+    logout(request)
+
+    return redirect("login")
+
+
 @login_required
 def index(request):
-    num_redactors = Redactor.objects.count()
+    redactor = Redactor.objects.all()
+    newspaper = Newspaper.objects.all()
+    num_redactors = redactor.count()
     num_topics = Topic.objects.count()
-    num_newspapers = Newspaper.objects.count()
+    num_newspapers = newspaper.count()
 
     num_visits = request.session.get("num_visits", 0)
     request.session["num_visits"] = num_visits + 1
 
     context = {
+        "redactor_info": redactor.order_by("-years_of_experience")[:5],
+        "newspaper_articles": newspaper.order_by("-published_date")[:5],
         "num_redactors": num_redactors,
         "num_topics": num_topics,
         "num_newspapers": num_newspapers,
@@ -41,18 +76,21 @@ class TopicListView(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(TopicListView, self).get_context_data()
+
         name = self.request.GET.get("name", "")
-        context["search_form"] = TopicSearchForm(
-            initial={"name": name}
-        )
+
+        context["search_form"] = TopicSearchForm(initial={"name": name})
+
         return context
 
     def get_queryset(self):
         form = TopicSearchForm(self.request.GET)
+
         if form.is_valid():
             return self.queryset.filter(
                 name__icontains=form.cleaned_data["name"]
             )
+
         return self.queryset
 
 
@@ -80,18 +118,21 @@ class NewspaperListView(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(NewspaperListView, self).get_context_data()
+
         title = self.request.GET.get("title", "")
-        context["search_form"] = NewspaperSearchForm(
-            initial={"title": title}
-        )
+
+        context["search_form"] = NewspaperSearchForm(initial={"title": title})
+
         return context
 
     def get_queryset(self):
         form = NewspaperSearchForm(self.request.GET)
+
         if form.is_valid():
             return self.queryset.filter(
                 title__icontains=form.cleaned_data["title"]
             )
+
         return self.queryset
 
 
@@ -119,19 +160,27 @@ class NewspaperDeleteView(LoginRequiredMixin, generic.DeleteView):
 class RedactorListView(LoginRequiredMixin, generic.ListView):
     model = Redactor
     paginate_by = 5
-
-    queryset = Redactor.objects.prefetch_related("newspapers")
+    queryset = Redactor.objects.all()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(RedactorListView, self).get_context_data(**kwargs)
+
         username = self.request.GET.get("username", "")
-        context["search_form"] = RedactorSearchForm(initial={"username": username})
+
+        context["search_form"] = RedactorSearchForm(
+            initial={"username": username}
+        )
+
         return context
 
     def get_queryset(self):
         form = RedactorSearchForm(self.request.GET)
+
         if form.is_valid():
-            return self.queryset.filter(username__icontains=form.cleaned_data["username"])
+            return self.queryset.filter(
+                username__icontains=form.cleaned_data["username"]
+            )
+
         return self.queryset
 
 
@@ -148,7 +197,7 @@ class RedactorCreationView(LoginRequiredMixin, generic.CreateView):
 
 class RedactorUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Redactor
-    form_class = RedactorYearsUpdateForm
+    form_class = RedactorUpdateForm
     success_url = reverse_lazy("catalog:redactor-list")
 
 
