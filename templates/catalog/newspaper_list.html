@@ -4,30 +4,49 @@
 {% block content %}
     <h1>Newspaper List</h1>
     <h2>
-        
         <a href="{% url 'catalog:newspaper-create' %}" class="btn btn-primary link-to-page">
             Create
         </a>
     </h2>
-    
+
     <form action="" method="get" class="form-inline mb-3">
         {{ search_form|crispy }}
-        <input class="btn btn-primary" type="submit" value="🔍" aria-label="Search Newspapers">
+        <input class="btn btn-primary" type="submit" value="🔍" aria-label="Search newspapers by title or topic">
     </form>
-    
+
     {% if newspaper_list %}
         <ul class="list-unstyled">
             {% for newspaper in newspaper_list %}
                 <li>
-                    <a href="{% url 'catalog:newspaper-detail' pk=newspaper.id %}" aria-label="Read newspaper {{ newspaper.title }}">
+                    <a href="{% url 'catalog:newspaper-detail' pk=newspaper.id %}"
+                       aria-label="Read newspaper titled {{ newspaper.title }} on {{ newspaper.topic.name }}"
+                       style="color: white; line-height: 1.8;">
                         {{ newspaper.id }} - {{ newspaper.title }} ({{ newspaper.topic.name }})
                     </a>
                 </li>
             {% endfor %}
         </ul>
+
+
+        <div class="pagination">
+            {% if newspaper_list.has_previous %}
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page={{ newspaper_list.previous_page_number }}">Previous</a>
+            {% endif %}
+            <span>Page {{ newspaper_list.number }} of {{ newspaper_list.paginator.num_pages }} 1 </span>
+            {% if newspaper_list.has_next %}
+                <a href="?page={{ newspaper_list.next_page_number }}">Next</a>
+                <a href="?page={{ newspaper_list.paginator.num_pages }}">Last &raquo;</a>
+            {% endif %}
+        </div>
+
     {% else %}
         <div class="alert alert-info" role="alert">
-            There are no newspapers in the newspaper agency.
+            {% if search_form.cleaned_data %}
+                No newspapers found for your search.
+            {% else %}
+                There are no newspapers in the newspaper agency.
+            {% endif %}
         </div>
     {% endif %}
 {% endblock %}
