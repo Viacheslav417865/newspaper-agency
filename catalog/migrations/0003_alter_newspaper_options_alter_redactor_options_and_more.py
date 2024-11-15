@@ -8,7 +8,8 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('catalog', '0002_alter_newspaper_options_alter_redactor_options_and_more'),
+        ('catalog',
+         '0002_alter_newspaper_options_alter_redactor_options_and_more'),
     ]
 
     operations = [
@@ -18,7 +19,10 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='redactor',
-            options={'verbose_name': 'redactor', 'verbose_name_plural': 'redactors'},
+            options={
+                'verbose_name': 'redactor',
+                'verbose_name_plural': 'redactors',
+            },
         ),
         migrations.AlterModelOptions(
             name='topic',
@@ -35,7 +39,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='topic',
             name='name',
-            field=models.CharField(default='Untitled', max_length=255, unique=True),
+            field=models.CharField(
+                default='Untitled',
+                max_length=255,
+                unique=True,
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
@@ -46,17 +54,26 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='newspaper',
             name='redactor',
-            field=models.ManyToManyField(related_name='newspaper', to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(
+                related_name='newspaper',
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
             model_name='newspaper',
             name='title',
-            field=models.CharField(max_length=255),
+            field=models.CharField(
+                max_length=255,
+            ),
         ),
         migrations.AlterField(
             model_name='newspaper',
             name='topic',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='newspaper', to='catalog.topic'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='newspaper',
+                to='catalog.topic',
+            ),
         ),
         migrations.AlterField(
             model_name='redactor',

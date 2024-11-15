@@ -38,7 +38,9 @@ def login_view(request):
         else:
             msg = "Error validating the form"
 
-    return render(request, "registration/login.html", {"form": form, "msg": msg})
+    return render(request,
+                  "registration/login.html",
+                  {"form": form, "msg": msg})
 
 
 def logout_view(request):
@@ -152,7 +154,9 @@ class NewspaperCreateView(LoginRequiredMixin, generic.CreateView):
     success_url = reverse_lazy("catalog:newspaper-list")
 
     def get_success_url(self):
-        return reverse_lazy("catalog:newspaper-detail", kwargs={'pk': self.object.pk})
+        return reverse_lazy("catalog:newspaper-detail",
+                            kwargs={'pk': self.object.pk})
+
 
 class NewspaperUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Newspaper

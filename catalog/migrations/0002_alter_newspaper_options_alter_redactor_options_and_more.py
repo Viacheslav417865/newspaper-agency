@@ -18,7 +18,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='redactor',
-            options={'ordering': ['years_of_experience', 'username'], 'verbose_name': 'redactor', 'verbose_name_plural': 'redactors'},
+            options={
+                'ordering': ['years_of_experience', 'username'],
+                'verbose_name': 'redactor',
+                'verbose_name_plural': 'redactors'
+            },
         ),
         migrations.AlterModelOptions(
             name='topic',
@@ -31,12 +35,18 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='newspaper',
             name='main_img',
-            field=models.ImageField(default='images/Default.jpg', upload_to='images/'),
+            field=models.ImageField(
+                default='images/Default.jpg',
+                upload_to='images/',
+            ),
         ),
         migrations.AddField(
             model_name='topic',
             name='title',
-            field=models.CharField(default='Default Title', max_length=255),
+            field=models.CharField(
+                default='Default Title',
+                max_length=255,
+            ),
         ),
         migrations.AlterField(
             model_name='newspaper',
@@ -46,17 +56,27 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='newspaper',
             name='redactor',
-            field=models.ManyToManyField(related_name='newspapers', to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(
+                related_name='newspapers',
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
             model_name='newspaper',
             name='title',
-            field=models.CharField(max_length=255, unique=True),
+            field=models.CharField(
+                max_length=255,
+                unique=True,
+            ),
         ),
         migrations.AlterField(
             model_name='newspaper',
             name='topic',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='newspapers', to='catalog.topic'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='newspapers',
+                to='catalog.topic',
+            ),
         ),
         migrations.AlterField(
             model_name='redactor',
@@ -66,10 +86,24 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ActivateToken',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(
+                    auto_created=True,
+                    primary_key=True,
+                    serialize=False,
+                    verbose_name='ID',
+                )),
                 ('create_at', models.DateTimeField(auto_now_add=True)),
-                ('token', models.CharField(blank=True, default=None, max_length=64, unique=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tokens', to=settings.AUTH_USER_MODEL)),
+                ('token', models.CharField(
+                    blank=True,
+                    default=None,
+                    max_length=64,
+                    unique=True,
+                )),
+                ('user', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='tokens',
+                    to=settings.AUTH_USER_MODEL,
+                )),
             ],
             options={
                 'verbose_name_plural': 'Activation tokens',
