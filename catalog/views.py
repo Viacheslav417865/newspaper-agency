@@ -1,7 +1,8 @@
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
+
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 
 from catalog.form import (
@@ -45,11 +46,12 @@ class LogoutView(BaseView):
     def get(self, request):
         logout(request)
         next_url = request.GET.get("next", "/")
-        return redirect("login")
+        return redirect(next_url)
 
     def post(self, request):
         logout(request)
         return redirect("login")
+
 
 class IndexView(BaseView):
     def get(self, request):
@@ -122,8 +124,7 @@ class NewspaperListView(BaseView, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         title = self.request.GET.get("title", "")
-        context["search_form"] = (
-            NewspaperSearchForm(initial={"title": title}))
+        context["search_form"] = NewspaperSearchForm(initial={"title": title})
         context["newspaper_list"] = self.object_list
         return context
 
@@ -146,8 +147,7 @@ class NewspaperCreateView(BaseView, CreateView):
     success_url = reverse_lazy("catalog:newspaper-list")
 
     def get_success_url(self):
-        return reverse_lazy("catalog:newspaper-detail",
-                            kwargs={'pk': self.object.pk})
+        return reverse_lazy("catalog:newspaper-detail", kwargs={'pk': self.object.pk})
 
 
 class NewspaperUpdateView(BaseView, UpdateView):
@@ -211,12 +211,28 @@ class RedactorDeleteView(BaseView, DeleteView):
 
 @login_required
 def toggle_assign_to_newspaper(request, pk):
-    redactor = Redactor.objects.get(id=request.user.id)
-    if Newspaper.objects.get(id=pk) in redactor.newspaper.all():
-        redactor.newspaper.remove(pk)
+    # Ensure the user is a Redactor (inherits from AbstractUser)
+    if not isinstance(request.user, Redactor):
+        return redirect("login")
+
+    newspaper = Newspaper.objects.get(id=pk)
+
+    if request.user.newspapers.filter(id=pk).exists():
+        request.user.newspapers.remove(newspaper)
     else:
-        redactor.newspaper.add(pk)
-    from django.http import HttpResponseRedirect
-    return HttpResponseRedirect(
-        reverse_lazy("catalog:newspaper-detail", args=[pk])
-    )
+        request.user.newspapers.add(newspaper)
+
+    return redirect("catalog:newspaper-detail", pk=pk)
+
+
+@login_required
+def create_newspaper(request):
+    if request.method == "POST":
+        form = NewspaperForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("catalog:newspaper-list")
+    else:
+        form = NewspaperForm()
+
+    return render(request, "catalog/newspaper_form.html", {"form": form})

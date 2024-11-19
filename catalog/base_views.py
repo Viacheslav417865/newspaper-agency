@@ -17,7 +17,7 @@ class BaseView(LoginRequiredMixin, View):
             return redirect(success_url)
         else:
             return self.render_view(request,
-                                    "form_template.html",
+                                    "redactor_form.html",
                                     {"form": form})
 
     def get_context_data(self, **kwargs):
