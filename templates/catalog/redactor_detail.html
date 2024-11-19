@@ -16,7 +16,7 @@
             <p><strong>Last Name:</strong> {{ redactor.last_name }}</p>
             <p><strong>Years of Experience:</strong> {{ redactor.years_of_experience }}</p>
             <p><strong>Is Staff:</strong> {{ redactor.is_staff|yesno:"Yes,No" }}</p>
-            
+
             <div class="mt-4">
                 <h4>Newspapers</h4>
                 {% if redactor.newspaper.all %}

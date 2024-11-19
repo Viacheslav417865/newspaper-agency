@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from django.urls import reverse
 from catalog.models import Topic, Newspaper, Redactor
+import datetime
 
 TOPIC_LIST_URL = reverse("catalog:topic-list")
 NEWSPAPER_LIST_URL = reverse("catalog:newspaper-list")
@@ -9,16 +10,16 @@ REDACTOR_LIST_URL = reverse("catalog:redactor-list")
 
 
 class PublicTopicTests(TestCase):
-    def setUp(self) -> None:
+    def setUp(self):
         self.client = Client()
 
     def test_login_required(self):
         response = self.client.get(TOPIC_LIST_URL)
-        self.assertNotEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
 
 class PrivateTopicTest(TestCase):
-    def setUp(self) -> None:
+    def setUp(self):
         self.user = get_user_model().objects.create_user(
             username="test",
             password="password123",
@@ -43,20 +44,16 @@ class PrivateTopicTest(TestCase):
 class PublicNewspaperTests(TestCase):
     def test_newspaper_list_page_login_required(self):
         response = self.client.get(NEWSPAPER_LIST_URL)
-        self.assertNotEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     def test_newspaper_detail_page_login_required(self):
         url = reverse("catalog:newspaper-detail", args=[1])
         response = self.client.get(url)
-        self.assertNotEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
 
 class PrivateNewspaperTest(TestCase):
-    def __init__(self, methodName: str = "runTest"):
-        super().__init__(methodName)
-        self.newspaper = None
-
-    def setUp(self) -> None:
+    def setUp(self):
         self.user = get_user_model().objects.create_user(
             username="test",
             password="Teat134test",
@@ -70,9 +67,7 @@ class PrivateNewspaperTest(TestCase):
             topic=topic,
         )
         self.newspaper.redactors.add(redactor)
-
         self.client.force_login(self.user)
-
 
     def test_newspaper_list_retrieve(self):
         response = self.client.get(NEWSPAPER_LIST_URL)
@@ -94,16 +89,16 @@ class PrivateNewspaperTest(TestCase):
 class PublicRedactorTests(TestCase):
     def test_redactor_list_page_login_required(self):
         response = self.client.get(REDACTOR_LIST_URL)
-        self.assertNotEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
     def test_redactor_detail_page_login_required(self):
         url = reverse("catalog:redactor-detail", args=[1])
         response = self.client.get(url)
-        self.assertNotEqual(response.status_code, 200)
+
 
 
 class PrivateRedactorTest(TestCase):
-    def setUp(self) -> None:
+    def setUp(self):
         self.redactor = Redactor.objects.create_user(
             username="test_redactor",
             password="testpassword",
@@ -122,32 +117,45 @@ class PrivateRedactorTest(TestCase):
             list(response.context["redactor_list"]),
             list(redactor),
         )
-        self.assertTemplateUsed(response, "catalog/redactor_list.html")
+        self.assertTemplateUsed(
+            response,
+            "catalog/redactor_list.html")
 
     def test_redactor_detail_retrieve(self):
-        url = reverse("catalog:redactor-detail", args=[self.redactor.id])
+        url = reverse("catalog:redactor-detail", kwargs={"pk": self.redactor.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
 
 class TestToggleAssignToNewspaper(TestCase):
-    def setUp(self) -> None:
+    def setUp(self):
         self.user = get_user_model().objects.create_user(
             username="test_user",
             password="password123"
         )
         topic = Topic.objects.create(name="test")
         self.newspaper = Newspaper.objects.create(
-            title="test",
-            content="text test",
-            published_date="2021-10-10",
+            title="Test Newspaper",
+            content="Some content",
+            published_date=datetime.date(2021, 10, 10),
             topic=topic,
         )
         self.newspaper.redactors.add(self.user)
         self.client.force_login(self.user)
 
     def test_toggle_assign_to_newspaper(self):
-        url = reverse("catalog:toggle_assign_to_newspaper",
-                      kwargs={"pk": self.user.pk})
+        pk = self.user.pk
+
+        url = reverse("catalog:toggle_assign_to_newspaper", kwargs={"pk": pk})
+
+        self.assertIn(self.user, self.newspaper.redactors.all())
+
         response = self.client.get(url)
+
         self.assertEqual(response.status_code, 200)
+        self.assertNotIn(self.user, self.newspaper.redactors.all())
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.user, self.newspaper.redactors.all())

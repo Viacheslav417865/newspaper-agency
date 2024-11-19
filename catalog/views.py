@@ -1,7 +1,7 @@
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 
 from catalog.form import (
@@ -44,8 +44,12 @@ class LoginView(BaseView):
 class LogoutView(BaseView):
     def get(self, request):
         logout(request)
+        next_url = request.GET.get("next", "/")
         return redirect("login")
 
+    def post(self, request):
+        logout(request)
+        return redirect("login")
 
 class IndexView(BaseView):
     def get(self, request):
@@ -176,9 +180,16 @@ class RedactorListView(BaseView, ListView):
         return self.queryset
 
 
-class RedactorDetailView(BaseView, DetailView):
+class RedactorDetailView(DetailView):
     model = Redactor
-    queryset = Redactor.objects.prefetch_related("newspapers__topic")
+    template_name = "catalog/redactor_detail.html"
+    context_object_name = "redactor"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if "redactor" in context:
+            print(context["redactor"].id)
+        return context
 
 
 class RedactorCreationView(BaseView, CreateView):
@@ -195,7 +206,7 @@ class RedactorUpdateView(BaseView, UpdateView):
 
 class RedactorDeleteView(BaseView, DeleteView):
     model = Redactor
-    success_url = reverse_lazy("catalog:redactor-list")
+    success_url = reverse_lazy("catalog:redactor-delete")
 
 
 @login_required

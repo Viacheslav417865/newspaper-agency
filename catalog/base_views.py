@@ -4,7 +4,6 @@ from django.views import View
 
 
 class BaseView(LoginRequiredMixin, View):
-
     @staticmethod
     def render_view(request, template_name,
                     context=None):

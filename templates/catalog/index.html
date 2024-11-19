@@ -53,7 +53,8 @@
                     <div class="row">
                         <div class="col-md-4 position-relative">
                             <div class="p-3 text-center">
-                                <h1 class="text-gradient text-primary"><span id="state1" countTo="{{ num_newspapers }}">3</span>+</h1>
+                                <h1 class="text-gradient text-primary"><span id="state1" countTo="{{ num_newspapers }}">3</span>+
+                                </h1>
                                 <h5 class="text-dark mt-3">Newspaper</h5>
                                 <p class="text-sm">...</p>
                             </div>
@@ -61,7 +62,9 @@
                         </div>
                         <div class="col-md-4 position-relative">
                             <div class="p-3 text-center">
-                                <h1 class="text-gradient text-primary"><span id="state2" countTo="{{ num_redactors }}">3</span>+</h1>
+                                <h1 class="text-gradient text-primary"><span id="state2"
+                                                                             countTo="{{ num_redactors }}">3</span>+
+                                </h1>
                                 <h5 class="text-dark mt-3">Redactor</h5>
                                 <p class="text-sm">...</p>
                             </div>
@@ -103,18 +106,18 @@
             }
         }
 
-        if (document.getElementById('state1')) {
-            const countUp1 = new CountUp('state1', document.getElementById("state1").getAttribute("countTo"));
+        if (document.getElementById("state1")) {
+            const countUp1 = new CountUp("state1", document.getElementById("state1").getAttribute("countTo"));
             countUp1.start();
         }
 
-        if (document.getElementById('state2')) {
-            const countUp2 = new CountUp('state2', document.getElementById("state2").getAttribute("countTo"));
+        if (document.getElementById("state2")) {
+            const countUp2 = new CountUp("state2", document.getElementById("state2").getAttribute("countTo"));
             countUp2.start();
         }
 
-        if (document.getElementById('state3')) {
-            const countUp3 = new CountUp('state3', document.getElementById("state3").getAttribute("countTo"));
+        if (document.getElementById("state3")) {
+            const countUp3 = new CountUp("state3", document.getElementById("state3").getAttribute("countTo"));
             countUp3.start();
         }
     </script>
