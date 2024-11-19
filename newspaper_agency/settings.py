@@ -110,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = "catalog.Redactor"
 
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/catalog/"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

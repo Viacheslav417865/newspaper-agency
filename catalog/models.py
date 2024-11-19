@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 
 class Topic(models.Model):
@@ -31,6 +31,10 @@ class Redactor(AbstractUser):
     class Meta:
         verbose_name = "redactor"
         verbose_name_plural = "redactors"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.newspaper = None
 
     def __str__(self):
         return f"{self.username} ({self.first_name} {self.last_name})"

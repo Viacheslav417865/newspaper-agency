@@ -1,6 +1,6 @@
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 
@@ -211,12 +211,12 @@ class RedactorDeleteView(BaseView, DeleteView):
 
 @login_required
 def toggle_assign_to_newspaper(request, pk):
-    redactor = get_object_or_404(Redactor, pk=pk)
-    newspaper = Newspaper.objects.filter(redactor=redactor).first()
-
-    if newspaper:
-        redactor.newspapers.remove(newspaper)
+    redactor = Redactor.objects.get(id=request.user.id)
+    if Newspaper.objects.get(id=pk) in redactor.newspaper.all():
+        redactor.newspaper.remove(pk)
     else:
-        redactor.newspapers.add(newspaper)
-
-    return redirect("catalog:newspaper-detail", pk=newspaper.pk)
+        redactor.newspaper.add(pk)
+    from django.http import HttpResponseRedirect
+    return HttpResponseRedirect(
+        reverse_lazy("catalog:newspaper-detail", args=[pk])
+    )

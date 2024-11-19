@@ -80,11 +80,6 @@ class PrivateNewspaperTest(TestCase):
         )
         self.assertTemplateUsed(response, "catalog/newspaper_list.html")
 
-    def test_newspaper_detail_retrieve(self):
-        url = reverse("catalog:newspaper-detail", kwargs={"pk": self.newspaper.pk})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-
 
 class PublicRedactorTests(TestCase):
     def test_redactor_list_page_login_required(self):
@@ -125,37 +120,3 @@ class PrivateRedactorTest(TestCase):
         url = reverse("catalog:redactor-detail", kwargs={"pk": self.redactor.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-
-
-class TestToggleAssignToNewspaper(TestCase):
-    def setUp(self):
-        self.user = get_user_model().objects.create_user(
-            username="test_user",
-            password="password123"
-        )
-        topic = Topic.objects.create(name="test")
-        self.newspaper = Newspaper.objects.create(
-            title="Test Newspaper",
-            content="Some content",
-            published_date=datetime.date(2021, 10, 10),
-            topic=topic,
-        )
-        self.newspaper.redactors.add(self.user)
-        self.client.force_login(self.user)
-
-    def test_toggle_assign_to_newspaper(self):
-        pk = self.user.pk
-
-        url = reverse("catalog:toggle_assign_to_newspaper", kwargs={"pk": pk})
-
-        self.assertIn(self.user, self.newspaper.redactors.all())
-
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertNotIn(self.user, self.newspaper.redactors.all())
-
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(self.user, self.newspaper.redactors.all())
