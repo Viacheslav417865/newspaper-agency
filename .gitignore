@@ -309,8 +309,8 @@ fabric.properties
 
 # pdm
 #   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
-#   in version control.
+# pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
+# in version control.
 #   https://pdm.fming.dev/#use-with-ide
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
@@ -351,4 +351,5 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-# End of https://www.toptal.com/developers/gitignore/api/python,django,pycharm+all"cert.key" 
+# End of https://www.toptal.com/developers/gitignore/api/python,django,pycharm+all
+cert.key
