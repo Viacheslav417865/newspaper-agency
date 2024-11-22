@@ -345,12 +345,10 @@ fabric.properties
 # Poetry local configuration file - https://python-poetry.org/docs/configuration/#local-configuration
 poetry.toml
 
-cert.key
-
 # ruff
 .ruff_cache/
 
 # LSP config files
 pyrightconfig.json
 
-# End of https://www.toptal.com/developers/gitignore/api/python,django,pycharm+all
+# End of https://www.toptal.com/developers/gitignore/api/python,django,pycharm+all"cert.key" 
