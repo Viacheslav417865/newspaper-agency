@@ -14,30 +14,13 @@ from pathlib import Path
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY")
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DJANGO_DEBUG", "") != "False"
-
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
-
-SECURE_HSTS_SECONDS = 0
-
-SECURE_HSTS_INCLUDE_SUBDOMAINS = False
-
-SECURE_HSTS_PRELOAD = False
-
-SECURE_SSL_REDIRECT = False
-
-SESSION_COOKIE_SECURE = False
-
-CSRF_COOKIE_SECURE = False
 
 # Application definition
 
@@ -50,7 +33,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "crispy_forms",
     "crispy_bootstrap5",
-    "catalog"
+    "catalog",
+    "sslserver",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -87,16 +72,6 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 WSGI_APPLICATION = "newspaper_agency.wsgi.application"
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -146,6 +121,8 @@ STATIC_ROOT = "staticfiles/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000", "http://localhost:8000"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

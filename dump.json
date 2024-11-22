@@ -1,0 +1,116 @@
+[
+{
+    "model": "catalog.topic",
+    "pk": 1,
+    "fields": {
+        "name": "Histori"
+    }
+},
+{
+    "model": "catalog.topic",
+    "pk": 2,
+    "fields": {
+        "name": "Sport"
+    }
+},
+{
+    "model": "catalog.topic",
+    "pk": 3,
+    "fields": {
+        "name": "News"
+    }
+},
+{
+    "model": "catalog.newspaper",
+    "pk": 1,
+    "fields": {
+        "title": "Searching for a ‘Forever Home’ in Boston, a Family Played the Long Game",
+        "content": "When Mallory and David Gonzalez bought their three-bedroom duplex in Charlestown, the historic Boston neighborhood where the Charles and Mystic Rivers meet, it was the perfect size. One of the bedrooms became an office for Mr. Gonzalez, who works remotely. Two years later, in late 2018, the couple welcomed their son, Rainer, to the condo, and things started to feel a bit tighter.\r\n\r\n“This place, don’t get me wrong, it certainly has enough space for the three of us,” said Ms. Gonzalez, 39, a vice president at a commercial real estate firm. “But there were little pain points, I think, that came with having a kid.”\r\n\r\nFor one, they didn’t have the storage space for Rainer’s toys, nor a mudroom for their dirty shoes and the stroller. Even 200 more square feet, Ms. Gonzalez quipped, would have been helpful.",
+        "published_date": "2024-11-14",
+        "topic": 3,
+        "redactors": []
+    }
+},
+{
+    "model": "catalog.newspaper",
+    "pk": 2,
+    "fields": {
+        "title": "Trump Called His Win a ‘Historic Realignment’ of U.S. Politics. We Have Our Doubts.",
+        "content": "In his victory speech last week, Donald Trump declared that a “historic realignment” in American politics had occurred. His claim has been echoed by Republican intellectuals. In a podcast the day after, Michael Needham, the chairman of American Compass, said, “We are seeing the realignment come to mind.”\r\n\r\nAs writers who once made an argument for a potential emerging Democratic majority, we are especially curious when a new one comes up — and because of our own experience, we treat claims by Mr. Trump and others of a durable Republican realignment with some skepticism.\r\n\r\nThere are two meanings for a realignment claim. The first is that the parties’ coalitions have changed. This is undeniable, but the changes really began during the period from the 1970s through 1994. During that time, portions of the white working class began their journey from the Democratic to the Republican Party. They were originally called Reagan Democrats.",
+        "published_date": "2024-11-14",
+        "topic": 1,
+        "redactors": []
+    }
+},
+{
+    "model": "catalog.newspaper",
+    "pk": 3,
+    "fields": {
+        "title": "Gary Lineker to Leave BBC’s ‘Match of the Day’",
+        "content": "After a 26-year run, the voice of the broadcaster’s popular soccer highlights show will leave at the end of the 2025 season, the network said Tuesday.\r\n\r\nGary Lineker, the prolific English sports personality and former soccer star, will leave the BBC’s flagship soccer program “Match of the Day” after this Premier League season, the broadcaster said on Tuesday.\r\n\r\n“Gary will also be stepping away from Match of the Day after an incredible 25 years at the end of the current season,” Alex Kay-Jelski, the director of BBC Sport, said in an email to staff members that was seen by The New York Times. “It’s a national gem, watched by millions of people every week. And one we are very proud of.”\r\n\r\nMr. Lineker has anchored the weekly highlights show since 1999. Though he is leaving the program, Mr. Lineker will cover the 2026 World Cup for the BBC, as well as the F.A. Cup in the 2025-26 season, Mr. Kay-Jelski told the staff.",
+        "published_date": "2024-11-14",
+        "topic": 2,
+        "redactors": []
+    }
+},
+{
+    "model": "catalog.redactor",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$O3YB3tPuo73jn57H7FjVBC$aAKxpJdwQMjWTJDyyY3mzZP9c8AcvL430i4BYLtD7vw=",
+        "last_login": "2024-11-19T10:31:29.011Z",
+        "is_superuser": true,
+        "username": "Name",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-11-13T14:07:19.691Z",
+        "years_of_experience": 1,
+        "groups": [],
+        "user_permissions": [],
+        "newspapers": []
+    }
+},
+{
+    "model": "catalog.redactor",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$shysEDZ80tnWAcugmEOFJx$10q3/gDojgTgUWoq+V8pN42JmvlDPb+R2k2LRS6WNGA=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "JohnDoe",
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-11-14T18:27:16.416Z",
+        "years_of_experience": 28,
+        "groups": [],
+        "user_permissions": [],
+        "newspapers": []
+    }
+},
+{
+    "model": "catalog.redactor",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$QlWDZ8FAIBa7H8jyhkgGw7$AWZX8Oz9uH9LrWgvq29zLvhRuSobW3/n6GrdKaJR50I=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "TarasBulba",
+        "first_name": "Taras",
+        "last_name": "Bulba",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-11-14T18:29:45.880Z",
+        "years_of_experience": 48,
+        "groups": [],
+        "user_permissions": [],
+        "newspapers": []
+    }
+}
+]
